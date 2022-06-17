@@ -15,7 +15,7 @@ def actual_program():
         view_all_accounts()
     else:
         print("It would appear somethings gone wrong, please try again")
-        actual_program
+        actual_program()
     restarter = input("Would you like to use another service? (yes) (no)")
     if restarter.upper() == "YES":
         actual_program()
@@ -47,7 +47,7 @@ def view_account(search):
     
 
 def view_all_accounts():
-    if account_list is not NULL:
+    if account_list != []:
         print(account_list)
     else:
         print("You dont seem to have an accounts yet, please add one and try again.")
