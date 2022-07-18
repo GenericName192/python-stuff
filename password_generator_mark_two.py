@@ -1,22 +1,6 @@
-user_list = []
 import random
 import string
 password_max_length = 10
-def actual_program_manager():
-    account_tracker = len(user_list)
-    user_name = new_user()
-    password = generate_password()
-    account_tracker = create_user(user_name, password, account_tracker)
-    run_again = input("Would you like to create another user? (yes) (no)").upper()
-    if run_again == "YES":
-        actual_program_manager()
-
-def new_user():
-    user_name = input("What would you like your username to be?")
-    password = []
-    password_current_length = 0
-    return user_name
-
 def generate_password():
     special_chars = ["!", "£", "$", "%", "^", "&", "*", "(", ")", ":", ";", "?"]
     password = []
@@ -43,11 +27,3 @@ def generate_password():
             print("Well this is awkward this shouldnt have happened.")
 
     return "".join(password)
-
-def create_user(user_name, password, account_tracker):
-    account = [user_name, password]
-    user_list.append(account)
-    print("This is your new account, "+ ": ".join(account) + " make sure to rememeber is as im not sure how to recover the password yet =D and your account number is ", account_tracker)
-    return account_tracker +1
-
-actual_program_manager()
