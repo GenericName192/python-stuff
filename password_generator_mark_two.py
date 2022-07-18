@@ -1,3 +1,4 @@
+#just the actual password generation part from my password_generator_project, not sure why i called it mark two i just didnt know what to call it.
 import random
 import string
 password_max_length = 10
