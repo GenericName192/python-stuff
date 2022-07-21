@@ -1,0 +1,41 @@
+{% extends "base.html" %} {% block content
+  %}
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Home</title>
+  </head>
+  <body>
+    <h3>I couldn't think of a good name for this password manager </h3>
+    <form method="POST">
+    <div class="form-group">
+        <label for="webite">Website</label>
+        <input type="string" id="website" name="website" placeholder="Enter website" />
+    </div>
+    <div class="form-group">
+      <label for="user_name">User Name</label>
+      <input type="string" id="user_name" name="user_name" placeholder="Enter user name" />
+  </div>
+    <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" placeholder="Enter password" />
+    </div>
+      <div>
+        <button type="submit" class="btn btn-primary">Add webite</button>
+      </div>
+    </form>
+  <br>
+    <h4>Accounts stored</h4>
+    <ul class="list-group list-group-flush" id="passwords">
+      {% for account in user.accounts %}
+      <li class="list-group list-group-flush">{{website, account.website, name, account.user_name , password, account.password}}
+        <button type="button" class="close" onClick="deleteAccount({{ account.id }})">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </li>
+      {% endfor %}
+    </ul>
+
+  </body>
+</html>
+{% endblock %}
