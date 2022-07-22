@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Home</title>
+  </head>
+  <body>
+    <h3>I couldn't think of a good name for this weather searcher </h3>
+    {% with messages = get_flashed_messages(with_categories=true) %} {% if
+      messages %} {% for category, message in messages %} {% if category ==
+      'error' %}
+      <div class="alert alert-danger alter-dismissable fade show" role="alert">
+        {{ message }}
+        <button type="button" class="close" data-dismiss="alert">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      {% else %}
+      <div class="alert alert-success alter-dismissable fade show" role="alert">
+        {{ message }}
+      </div>
+      {% endif %}{% endfor %} {% endif %} {% endwith %}
+    <form method="POST">
+    <div>
+        <label for="city">Enter what city you wish to know the weather for.</label>
+        <input type="string" id="city" name="city" placeholder="Enter city" />
+    </div>
+    <div>
+        <button type="submit" >Search</button>
+    </div>
+    <div>
+        {% if city == "" %}
+        <p>Enter a city to begin</p>
+        {% else %}
+        <h3>The weather for {{city}} is</h3>
+        <p>{{weather}} with a temperature of {{temp}}</p>
+        {% endif %}
+    </div>
+    </form>
+    </body>
+</html>
