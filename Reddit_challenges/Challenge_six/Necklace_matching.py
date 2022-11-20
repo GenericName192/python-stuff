@@ -1,5 +1,6 @@
 # function to check if the two necklaces match by moving the first char to the end
-
+import math
+import itertools
 
 def necklace_checker(necklace_one: str, necklace_two: str):
     """
@@ -48,4 +49,62 @@ def k_ary(n: int, l: int):
         
     
 
-k_ary(3, 4)
+
+
+
+# No idea how this works, copied it
+def prime_factors(n):
+    factors = []
+    while n % 2 == 0:
+        if 2 not in factors:
+            factors.append(2)
+        n = n / 2
+    for i in range(3,int(math.sqrt(n))+1,2):
+        while n % i== 0:
+            if i not in factors:
+                factors.append(i)
+            n = n // i
+    if n > 2 and n not in factors:
+        factors.append(n)
+    return factors
+
+def phi(a):
+    if a <= 1:
+        return 1
+    # how many numbers less than a don't have any common factors except for 1
+    # e.g a = 12
+    # all numbers less than 6 = [1,2,3,4,5,6,7,8,9,10,11]
+    # 12's prime factors are 2*2*3
+    # 2,4,6,8,10 each have a common factor of 2
+    # 3,6,9 each have a common factor of 3
+    # so 2,3,4,6,8,9,10 all have some factor in common
+    # which numbers are left? 1,5,7,11
+    # return 4
+
+    # e.g a = 12
+    count = 0
+    factors_of_a = prime_factors(a) # [2,3]
+    for n in range(1,a): # n = 1, 2, 3, 4, 5, 6...
+        factors_of_n = prime_factors(n) # [], [2], [3], [2], [5], [2,3] ...
+        found_common_factor = False
+        for factor_of_n in factors_of_n: # go through all factors of n
+            if factor_of_n in factors_of_a: # if there's any factors in common with a, then ignore
+                found_common_factor = True
+                break
+
+        if not found_common_factor: # if, after going through all factors of n, we haven't found any factors in common then add 1 to count
+            count += 1
+    return count
+
+def necklace(k, n):
+    sum = 0
+    for a in range(n + 1):
+        for b in range(n + 1):
+            if a * b == n:
+                sum += phi(a) * (k ** b)
+
+    return (1/n) * sum
+
+print(necklace(13, 12))
+
+
