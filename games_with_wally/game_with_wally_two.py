@@ -11,6 +11,9 @@ def rgb(rgb: tuple):
 def random_color():
     return rgb((randrange(255),randrange(255),randrange(255)))
 
+def manhattan_distance(pos1, pos2):
+    return abs(pos1[0] - pos2[0]) + abs(pos1[1] - pos2[1])
+
 # The under the hood code for the game.
 class game():
     
@@ -34,7 +37,7 @@ class game():
             self.entity_list.append(mob(self))
         for x in range(15):
             self.entity_grid.add("rock", self.random_placement())
-        self.pass_methods = {}
+        self.pass_methods = {mob: self.passable_for_mob}
             
         
 
@@ -64,31 +67,18 @@ class game():
                     self.world.add("water", (x, y))
 
     # checks if the player can move in the dirction they're inputted.
-    def move_checker(self, dir: int, coords: tuple):
+    def move_checker(self, dir: int, coords: tuple, passable_method):
         """
         :args dir - this is an int we use to reprsent a dirction, with 3 being 
         up, 1 being down, 0 being right and 2 being left.
         :return - returns true if new_pos is within the map and false if its not
         """
-        match dir:
-            # up
-            case 3:
-                new_pos = (coords[0], coords[1] - 1)
-            # down
-            case 1:
-                new_pos = (coords[0], coords[1] + 1)
-            # right
-            case 0:
-                new_pos = (coords[0] + 1, coords[1])
-            # left
-            case 2:
-                new_pos = (coords[0] - 1, coords[1])
+        new_pos = self.cell_from(coords, dir)
         # checks to see if new_pos is off the map - if its greater then the 
         # width/height or less then equal to 0 its off the map.
-        print()
         return new_pos[0] >= 0 and new_pos[0] < self.width and new_pos[1] >= 0 \
             and new_pos[1] < self.height and \
-                self.passable_for_entity("something", self.entity_grid.get_value(new_pos), self.world.get_value(new_pos))
+                passable_method( self.entity_grid.get_value(new_pos), self.world.get_value(new_pos))
             
                 
                 
@@ -100,7 +90,7 @@ class game():
         :return - returns true if the player did manage to move and false if not
         """
         self.direction = dir
-        if not self.move_checker(dir, self.player_pos):
+        if not self.move_checker(dir, self.player_pos, self.passable_default):
             return False
         match dir:
             # up
@@ -141,7 +131,9 @@ class game():
                 return ( cell[0], (cell[1] -1))
 
     # works out what the shortest path is between two points.
-    def shortest_path(self, cell_one: tuple, cell_two: tuple, path_so_far: list, max_distance: int):
+    def shortest_path(self, cell_one: tuple, cell_two: tuple, path_so_far: list, max_distance: int, passable_method):
+        if manhattan_distance(cell_one, cell_two) > max_distance:
+            return None
         if max_distance == 0:
             return None
         if cell_one == cell_two: # checks if its arrived.
@@ -153,14 +145,14 @@ class game():
         dirs = list(range(4))
         while len(dirs) > 0: # while it can still check one of the 4 directions
             dir = dirs.pop(randrange(len(dirs))) # removes the direction once we've tried it
-            if not self.move_checker(dir, cell_one) \
+            if not self.move_checker(dir, cell_one, passable_method) \
                 or self.cell_from(cell_one, dir) in path_so_far: # checks if the
                 # mob can move in that dirction or if it has already gone that 
                 # direction, no point rechecking a path.
                 continue
             else:
                 path = self.shortest_path(self.cell_from(cell_one, dir), \
-                    cell_two, new_path_so_far, max_distance - 1) # if it can go in that direction 
+                    cell_two, new_path_so_far, max_distance - 1, passable_method) # if it can go in that direction 
                     # it calls itself to check if the next cell can go towards
                     # the targeted cell and does this untill it reaches the cell.
                 if path != None:
@@ -205,15 +197,49 @@ class game():
             self.held_object = None
 
     def passable_for_entity(self, entity, entity_cell, world_cell):
-        if entity in self.pass_methods:
+        if entity in self.pass_methods: # entity will either be a type or a string.
             return self.pass_methods[entity](entity_cell, world_cell)
         else:
-            if "water" in world_cell and not "rock" in entity_cell:
-                return False
-            if not "water" in world_cell:
-                return len(entity_cell) == 0
-            else:
-                return len(set(entity_cell) - {"rock"}) == 0
+            self.passable_default(entity_cell, world_cell)
+
+    def passable_default(self, entity_cell, world_cell):
+        if "water" in world_cell and not "rock" in entity_cell:
+            return False
+        if not "water" in world_cell:
+            return len(entity_cell) == 0
+        else:
+            return len(set(entity_cell) - {"rock"}) == 0
+    
+    def passable_for_mob(self, entity_cell, world_cell):
+        if len(list(filter(lambda x: type(x) == mob, entity_cell))) > 0: 
+            return True
+        else:
+            return self.passable_default(entity_cell, world_cell)
+
+    def cell_passable_for_entity(self, entity, pos):
+        if type(entity) == str:
+            return self.passable_for_entity(entity, self.entity_grid.get_value(pos),\
+                self.world.get_value(pos))
+        else:
+            return self.passable_for_entity(type(entity), self.entity_grid.get_value(pos),\
+                self.world.get_value(pos))
+
+    def deal_damage(self):
+        return randint(5, 10)
+
+    def attack(self):
+        mob_list = list(filter(lambda x: type(x) == mob, self.entity_grid.get_value(self.cell_from(self.player_pos, self.direction))))
+        if len(mob_list) == 0:
+            return
+        if mob_list[0].take_damage(self.deal_damage()):
+            self.entity_grid.remove(mob_list[0], mob_list[0].pos)
+            self.delete_mob(mob_list[0])
+
+    def delete_mob(self, mob):
+        self.entity_list.remove(mob)
+            
+        
+
                 
 
 
@@ -248,6 +274,10 @@ class interface():
         self.player_1_rock = PhotoImage(file = "games_with_wally\images\dude_rock_1.png")
         self.player_2_rock = PhotoImage(file = "games_with_wally\images\dude_rock_2.png")
         self.player_3_rock = PhotoImage(file = "games_with_wally\images\dude_rock_3.png")
+        self.player_hit_0 = PhotoImage(file = "games_with_wally\images\dudehit0.png")
+        self.player_hit_1 = PhotoImage(file = "games_with_wally\images\dudehit1.png")
+        self.player_hit_2 = PhotoImage(file = "games_with_wally\images\dudehit2.png")
+        self.player_hit_3 = PhotoImage(file = "games_with_wally\images\dudehit3.png")
         # dic of all the possible tiles we can draw.
         self.tile_images = {frozenset(["grass", "boulder", "tree"]): self.grass_boulder_tree_image,\
             frozenset(["grass"]): self.grass_image, frozenset(["water"]): self.water_image,\
@@ -267,7 +297,9 @@ class interface():
         self.entity_images = {"rock": self.rock_image}
         self.special_string_draw_methods = {"rock": self.draw_rock}
         self.player_images = {"default": [self.player_0,self.player_1,self.player_2,self.player_3],\
-             "rock": [self.player_0_rock,self.player_1_rock,self.player_2_rock,self.player_3_rock]}
+             "rock": [self.player_0_rock,self.player_1_rock,self.player_2_rock,self.player_3_rock],
+             "attack":[self.player_hit_0, self.player_hit_1, self.player_hit_2, self.player_hit_3]}
+        self.attacking = False
 
 
     # draws a tile out using the coords given and the key for tile_images.
@@ -345,7 +377,9 @@ class interface():
     # Draws the player in the center of the screen with an offset to make them
     # not take up the whole tile.
     def draw_player(self):
-        if not self.game.held_object:
+        if self.attacking:
+            key = "attack"
+        elif not self.game.held_object:
             key = "default"
         elif type(self.game.held_object) == str:
             key = self.game.held_object
@@ -358,6 +392,12 @@ class interface():
     # allows the user to control the player char by capturing keyboard inputs.
     def handle_key(self, event):
         match event.keysym:
+            case "h":
+                self.attacking = True
+                self.game.attack()
+                self.set_player_pos(self.game.player_pos)
+                sleep(0.3)
+                self.attacking = False
             case "space":
                 if not self.game.held_object:
                     self.game.pick_up()
@@ -365,16 +405,28 @@ class interface():
                     self.game.put_down()
             case "Up":
                 self.player_image = self.player_3
-                self.game.move_player(3)
+                if self.game.direction == 3: 
+                    self.game.move_player(3)
+                else:
+                    self.game.direction = 3
             case "Down":
                 self.player_image = self.player_1
-                self.game.move_player(1)
+                if self.game.direction == 1:
+                    self.game.move_player(1)
+                else:
+                    self.game.direction = 1 
             case "Right":
                 self.player_image = self.player_0
-                self.game.move_player(0)
+                if self.game.direction == 0:
+                    self.game.move_player(0)
+                else:
+                    self.game.direction = 0
             case "Left":
                 self.player_image = self.player_2
-                self.game.move_player(2)                    
+                if self.game.direction == 2:
+                    self.game.move_player(2)
+                else:
+                    self.game.direction = 2                    
         self.set_player_pos(self.game.player_pos)
         self.game.do_stuff()
         
@@ -407,6 +459,7 @@ class interface():
         else:
             self.canvas.create_image(coords[0] * self.cell_size, coords[1] * self.cell_size, \
             anchor = NW, image = self.rock_image)
+    
 
 
 # Where the infomation on the tiles of the game map is kept.
@@ -493,9 +546,10 @@ class entity():
         self.pos = game.random_placement()
         self.game.entity_grid.add(self, self.pos)
         pick_up_able = False
+        self.mob_health = randint(10,20)
 
     def set_position(self, pos):
-        if not self.game.entity_grid.check_empty(pos):
+        if not self.game.passable_default(self.game.entity_grid.get_value(pos),self.game.world.get_value(pos) ):
             return
         self.game.entity_grid.remove(self, self.pos)
         self.pos = pos
@@ -510,10 +564,11 @@ class player(entity):
 
 class mob(entity):
 
+
     def do_something(self):
-        path = self.game.shortest_path(self.pos, self.game.player_pos, [], 5)
+        path = self.game.shortest_path(self.pos, self.game.player_pos, [], 10, self.game.passable_for_mob)
         if path != None: # if shortest_path has returned a value
-            if len(path) < 2:
+            if len(path) < 3:
                 return
             else:
                 self.set_position(path[1])
@@ -522,9 +577,17 @@ class mob(entity):
             # insert random movement here
             pass
 
+    def take_damage(self, damage):
+        self.mob_health -= damage
+        if self.mob_health <= 0:
+            return True
+        return False
+
+
+
 windim = 11
 
-game1 = game(40, 40, 4)
+game1 = game(40, 40, 10)
 playable_game = interface(game1, windim, windim, 100)
 
 
