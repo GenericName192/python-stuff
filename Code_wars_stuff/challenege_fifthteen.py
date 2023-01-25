@@ -26,7 +26,7 @@ def top_3_words(text):
             break
     return answer
 
-
+ 
 # code wars description
 
 # Write a function that, given a string of text (possibly with punctuation and 

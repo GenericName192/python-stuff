@@ -10,7 +10,7 @@ def is_solved(board):
             return center
         if center == board[0][2] and center == board[2][0]:
             return center
-
+ 
     for x in board:
         if 0 in x:
             checker = True

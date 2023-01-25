@@ -10,7 +10,7 @@ def strip_comments(strng, markers):
                        
     return "\n".join(new_string) # joins the string back together from the list.
 
-
+ 
 # code wars description 
 
 # Complete the solution so that it strips all text that follows any of a set of 
