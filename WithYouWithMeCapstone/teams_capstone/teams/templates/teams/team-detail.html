@@ -1,0 +1,37 @@
+{% extends "base.html" %} {% block content%}
+<div
+  class="card text-bg-primary mb-3"
+  style="padding: 10px; max-width: 28rem; height: 20rem"
+>
+  <div class="card-text">
+    <div class="card-header">Team {{team.name}} detail page</div>
+    <ul>
+      <li>Team ID: {{team.id}}</li>
+      <li>Team ID: {{team.id}}</li>
+      <li>Team name: {{team.name}}</li>
+      <li>Team location: {{team.location}}</li>
+      <li>
+        Team members:
+        <ul>
+          {% for member in members %}
+          <li>
+            <a href="{% url 'memberDetail' member.id %}" style="color: white">
+              {{ member.name }}
+            </a>
+          </li>
+          {% endfor %}
+        </ul>
+      </li>
+      <br />
+      <br />
+      <br />
+    </ul>
+    <a href="{% url 'teamUpdate' team.id %}"
+      ><button class="btn btn-light">Update</button></a
+    >
+    <a href="{% url 'teamDelete' team.id %}"
+      ><button class="btn btn-light">Delete</button></a
+    >
+    {% endblock %}
+  </div>
+</div>

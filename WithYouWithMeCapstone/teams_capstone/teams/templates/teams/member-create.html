@@ -1,0 +1,20 @@
+{% extends "base.html" %} {% block content%}
+<div
+  class="card text-bg-primary mb-3"
+  style="padding: 10px; max-width: 28rem; height: 20rem"
+>
+<div class="card-text">
+  <div class="card-header">Create member page</div>
+  <form method="post">
+    <table>
+      {{form}}
+    </table>
+    {% csrf_token %}
+    <button type="submit" class="btn btn-light">Create member</button>
+  </form>
+  </div>
+</div>
+</div>
+
+  {% endblock %}
+

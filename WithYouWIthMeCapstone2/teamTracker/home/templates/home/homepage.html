@@ -1,0 +1,165 @@
+{% extends "base.html" %} {% block content%}
+<div class="row">
+  <div class="col">
+    <div
+      class="card text"
+      style="
+        padding: 10px;
+        max-width: 28rem;
+        height: 20rem;
+        color: #275950;
+        background-color: #41bfb3;
+      "
+    >
+      <div class="card-text">
+        <div class="card-header">Members</div>
+        <a
+          href="{% url 'memberCreate' %}"
+          style="color: #275950; margin-left: 4%"
+          >Create new memeber</a
+        >
+        <ul>
+          {% for member in members %}
+          <li>
+            <a href="{% url 'memberDetail' member.id %}" style="color: #275950">
+              {{ member.name }}
+            </a>
+          </li>
+          {% endfor %}
+        </ul>
+        <!-- Members Paganation stuff -->
+        <nav>
+          <ul
+            class="pagination justify-content-end"
+            style="position: absolute; bottom: 0"
+          >
+            {% if members.has_previous %}
+            <li class="page-item">
+              <a href="?mPage=1" class="page-link">&laquo First</a>
+            </li>
+            <li class="page-item">
+              <a
+                href="?mPage={{ members.previous_page_number }}"
+                class="page-link"
+              >
+                Previous</a
+              >
+            </li>
+            {% endif %}
+            <li class="page-item disabled">
+              <a class="page-link"
+                >Page {{members.number}} of {{members.paginator.num_pages}}</a
+              >
+            </li>
+            {% if members.has_next %}
+            <li class="page-item">
+              <a href="?mPage={{ members.next_page_number }}" class="page-link"
+                >Next</a
+              >
+            </li>
+            <li class="page-item">
+              <a
+                href="?mPage={{ members.paginator.num_pages }}"
+                class="page-link"
+                >Last &raquo</a
+              >
+            </li>
+            {% endif %}
+          </ul>
+        </nav>
+        <!-- Members paganation stuff end -->
+      </div>
+    </div>
+  </div>
+  <div class="col">
+    <div
+      class="card text"
+      style="
+        padding: 10px;
+        max-width: 28rem;
+        height: 20rem;
+        background-color: #41bfb3;
+        color: #275950;
+      "
+    >
+      <div class="card-text">
+        <div class="card-header">Teams</div>
+        <a href="{% url 'teamCreate' %}" style="color: #275950; margin-left: 4%"
+          >Create new team</a
+        >
+        <ul>
+          {% for team in teams %}
+          <li>
+            <a href="{% url 'teamDetail' team.id %}" style="color: #275950">
+              {{ team.name }}
+            </a>
+          </li>
+          {% endfor %}
+        </ul>
+        <!-- Teams paganation stuff -->
+        <nav>
+          <ul
+            class="pagination justify-content-end"
+            style="position: absolute; bottom: 0"
+          >
+            {% if teams.has_previous %}
+            <li class="page-item">
+              <a href="?tPage=1" class="page-link">&laquo First</a>
+            </li>
+            <li class="page-item">
+              <a
+                href="?tPage={{ teams.previous_page_number }}"
+                class="page-link"
+              >
+                Previous</a
+              >
+            </li>
+            {% endif %}
+            <li class="page-item disabled">
+              <a class="page-link"
+                >Page {{teams.number}} of {{teams.paginator.num_pages}}</a
+              >
+            </li>
+            {% if teams.has_next %}
+            <li class="page-item">
+              <a href="?tPage={{ teams.next_page_number }}" class="page-link"
+                >Next</a
+              >
+            </li>
+            <li class="page-item">
+              <a href="?tPage={{ teams.paginator.num_pages }}" class="page-link"
+                >Last &raquo</a
+              >
+            </li>
+            {% endif %}
+          </ul>
+        </nav>
+        <!-- Teams paganation stuff end -->
+      </div>
+    </div>
+  </div>
+  <div class="col">
+    <div
+      class="card text"
+      style="
+        padding: 10px;
+        max-width: 28rem;
+        height: 20rem;
+        background-color: #41bfb3;
+        color: #275950;
+      "
+    >
+      <div class="card-text">
+        <div class="card-header">Locations</div>
+        <p>
+          <a
+            href="{% url 'locations' %}"
+            style="color: #275950; margin-left: 4%"
+            >Views locations</a
+          >
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

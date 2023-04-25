@@ -1,0 +1,26 @@
+{% extends "base.html" %} {% block content%}
+<div
+  class="card text-bg-primary mb-3"
+  style="padding: 10px; max-width: 28rem; height: 20rem"
+>
+  <div class="card-text">
+    <div class="card-header">Location {{location.name}} detail page</div>
+    <ul>
+      <li>Location ID: {{location.id}}</li>
+      <li>Location name: {{location.name}}</li>
+      <li>
+        Location teams:
+        <ul>
+          {% for team in teams %}
+          <li>
+            <a href="{% url 'teamDetail' team.id %}" style="color: white">
+              {{ team.name }}
+            </a>
+          </li>
+          {% endfor %}
+        </ul>
+      </li>
+    </ul>
+    {% endblock %}
+  </div>
+</div>

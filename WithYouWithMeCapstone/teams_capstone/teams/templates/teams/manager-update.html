@@ -1,0 +1,8 @@
+{% extends "base.html" %} {% block content%}
+<h2>Placeholder update manager page</h2>
+<form method="post">
+  {% csrf_token %} {{ form.as_p }}
+  <br />
+  <button type="submit">update manager</button>
+</form>
+{% endblock %}

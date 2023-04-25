@@ -1,0 +1,10 @@
+{% extends "base.html" %} {% block content%}
+<h2>Placeholder create location page</h2>
+<form method="post">
+  <table>
+    {{form}}
+  </table>
+  {% csrf_token %}
+  <button type="submit">Create location</button>
+</form>
+{% endblock %}

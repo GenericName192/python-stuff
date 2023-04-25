@@ -1,0 +1,15 @@
+{% extends "base.html" %} {% block content%}
+<div
+  class="card text-bg-primary mb-3"
+  style="padding: 10px; max-width: 28rem; height: 20rem"
+>
+  <div class="card-text">
+    <div class="card-header">Team {{team.name}} update page</div>
+    <form method="post">
+      {% csrf_token %} {{ form.as_p }}
+      <br />
+      <button type="submit" class="btn btn-light">update team</button>
+    </form>
+    {% endblock %}
+  </div>
+</div>

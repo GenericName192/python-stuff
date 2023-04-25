@@ -1,0 +1,16 @@
+{% extends "base.html" %} {% block content%}
+<h2>Manager {{manager.name}} detail page</h2>
+<p>
+  Manager ID: {{manager.id}} <br />
+  Manager name: {{manager.name}} <br />
+  Manager role: {{manager.role}} <br />
+  Manager start Date: {{manager.startDate}} <br />
+  Manager location: {{manager.location}} <br />
+  Manager Team: {{manager.team}} <br />
+</p>
+<a href="{% url 'managerUpdate' manager.id %}"><button>Update</button></a>
+<form method="post">
+  {% csrf_token %}
+  <button type="submit">delete</button>
+</form>
+{% endblock %}

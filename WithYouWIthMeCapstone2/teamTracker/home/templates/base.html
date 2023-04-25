@@ -1,0 +1,50 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+  <head>
+    {% block head %}{% endblock %}
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="/static/home/style.css">
+  </head>
+  <body style="background-color: #91f2e9;">
+    <div class="container">
+      <div class="col offset-2">
+        <nav class="nav nav-pills" style="margin-bottom: 20px;">
+          <li class="nav-item"></li>
+            <a class="nav-link active" href="{% url 'home' %}" style="margin-left: 20px; text-align: center; background-color: #2a8c82; color: #260101;">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" href="{% url 'locations' %}" style="margin-left: 20px; text-align: center; background-color: #2a8c82; color: #260101;">View locations</a>
+          </li>
+            <li class="nav-item">
+              <a class="nav-link active" href="{% url 'teamCreate' %}" style="margin-left: 20px; text-align: center; background-color: #2a8c82; color: #260101;">Create new team</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" href="{% url 'memberCreate' %}" style="margin-left: 20px; text-align: center; background-color: #2a8c82; color: #260101;">Create new memeber</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" href="/admin" style="margin-left: 20px; text-align: center; background-color: #2a8c82; color: #260101;">Admin</a></li>
+            </li>
+          </nav>
+        </div>
+      </div>
+    {% block content%} {% endblock %}
+    <script
+      src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.7/dist/umd/popper.min.js"
+      integrity="sha384-zYPOMqeu1DAVkHiLqWBUTcbYfZ8osu1Nd6Z89ify25QV9guujx43ITvfi12/QExE"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.min.js"
+      integrity="sha384-Y4oOpwW3duJdCWv5ly8SCFYWqFDsfob/3GkgExXKV4idmbt98QcxXYs9UoXAB7BZ"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>
