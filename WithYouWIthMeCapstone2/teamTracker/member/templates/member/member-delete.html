@@ -1,7 +1,0 @@
-{% extends "base.html" %} {% block content%}
-<h3 style="color: #275950">Are you sure you want to delete {{member.name}}?</h3>
-<form method="post">
-  {% csrf_token %}
-  <button type="submit" class="btn btn-light">Yes</button>
-</form>
-{% endblock %}
